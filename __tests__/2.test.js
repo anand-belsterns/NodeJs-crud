@@ -1,0 +1,4 @@
+json
+"scripts": {
+  "test": "jest"
+}
