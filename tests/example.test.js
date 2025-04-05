@@ -1,0 +1,1 @@
+const request = require('supertest'); const app = require('../app'); describe('GET /api/example', () => { it('should respond with a json object', async () => { const response = await request(app).get('/api/example'); expect(response.status).toBe(200); expect(response.body).toHaveProperty('message'); }); });
