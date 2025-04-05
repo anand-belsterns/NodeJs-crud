@@ -1,0 +1,1 @@
+const request = require('supertest'); const app = require('../app'); describe('GET /api/products', () => { it('should return a list of products', async () => { const response = await request(app).get('/api/products'); expect(response.status).toBe(200); expect(Array.isArray(response.body)).toBe(true); }); });
