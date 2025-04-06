@@ -8,50 +8,46 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/users', UserController);
 
+jest.mock('./User');
+const User = require('./User');
+
 describe('User API', () => {
   it('should create a new user', async () => {
+    User.create.mockImplementation((userData, callback) => callback(null, userData));
     const response = await request(app)
       .post('/users')
-      .send({ name: 'John Doe', email: 'john@example.com', password: '123456' });
-    expect(response.status).toBe(200);
-    expect(response.body.name).toBe('John Doe');
+      .send({ name: 'John Doe', email: 'john@example.com', password: 'password123' });
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toEqual({ name: 'John Doe', email: 'john@example.com', password: 'password123' });
   });
 
   it('should return all users', async () => {
-    const response = await request(app)
-      .get('/users');
-    expect(response.status).toBe(200);
-    expect(Array.isArray(response.body)).toBe(true);
+    User.find.mockImplementation((query, callback) => callback(null, [{ name: 'John Doe' }, { name: 'Jane Doe' }]));
+    const response = await request(app).get('/users');
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toEqual([{ name: 'John Doe' }, { name: 'Jane Doe' }]);
   });
 
-  it('should get a single user', async () => {
-    const user = await request(app)
-      .post('/users')
-      .send({ name: 'John Doe', email: 'john@example.com', password: '123456' });
-    const response = await request(app)
-      .get(`/users/${user.body._id}`);
-    expect(response.status).toBe(200);
-    expect(response.body.name).toBe('John Doe');
+  it('should return a single user', async () => {
+    User.findById.mockImplementation((id, callback) => callback(null, { name: 'John Doe' }));
+    const response = await request(app).get('/users/1');
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toEqual({ name: 'John Doe' });
   });
 
   it('should delete a user', async () => {
-    const user = await request(app)
-      .post('/users')
-      .send({ name: 'Jane Doe', email: 'jane@example.com', password: '123456' });
-    const response = await request(app)
-      .delete(`/users/${user.body._id}`);
-    expect(response.status).toBe(200);
-    expect(response.text).toContain('User: Jane Doe was deleted.');
+    User.findByIdAndRemove.mockImplementation((id, callback) => callback(null, { name: 'John Doe' }));
+    const response = await request(app).delete('/users/1');
+    expect(response.statusCode).toBe(200);
+    expect(response.text).toBe('User: John Doe was deleted.');
   });
 
   it('should update a user', async () => {
-    const user = await request(app)
-      .post('/users')
-      .send({ name: 'John Doe', email: 'john@example.com', password: '123456' });
+    User.findByIdAndUpdate.mockImplementation((id, userData, options, callback) => callback(null, { ...userData, name: 'Updated Name' }));
     const response = await request(app)
-      .put(`/users/${user.body._id}`)
-      .send({ name: 'John Smith' });
-    expect(response.status).toBe(200);
-    expect(response.body.name).toBe('John Smith');
+      .put('/users/1')
+      .send({ name: 'Updated Name' });
+    expect(response.statusCode).toBe(200);
+    expect(response.body.name).toBe('Updated Name');
   });
 });
