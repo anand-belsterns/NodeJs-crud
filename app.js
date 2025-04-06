@@ -1,8 +1,11 @@
-var express = require('express');
+var express = require("express");
 var app = express();
-var db = require('./db');
+var db = require("./db");
 
-var UserController = require('./user/UserController');
-app.use('/users', UserController);
+var UserController = require("./user/UserController");
+
+console.log("UserController ----------->>", UserController);
+
+app.use("/users", UserController);
 
 module.exports = app;
