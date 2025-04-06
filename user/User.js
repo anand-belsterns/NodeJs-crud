@@ -6,4 +6,7 @@ var UserSchema = new mongoose.Schema({
 });
 mongoose.model('User', UserSchema);
 
+console.log("mongoose ---------->>", mongoose);
+
 module.exports = mongoose.model('User');
+module.exports = User;
