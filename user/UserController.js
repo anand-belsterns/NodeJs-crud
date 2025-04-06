@@ -38,6 +38,17 @@ router.get('/:id', function (req, res) {
     });
 });
 
+
+router.get('/:id/:id', function (req, res) {
+    User.findById(req.params.id, function (err, user) {
+        console.log("user --------->>", user);
+        
+        if (err) return res.status(500).send("There was a problem finding the user.");
+        if (!user) return res.status(404).send("No user found.");
+        res.status(200).send(user);
+    });
+});
+
 // DELETES A USER FROM THE DATABASE
 router.delete('/:id', function (req, res) {
     User.findByIdAndRemove(req.params.id, function (err, user) {
