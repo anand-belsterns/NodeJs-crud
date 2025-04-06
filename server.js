@@ -6,3 +6,5 @@ var server = app.listen(port, function () {
 });
 
 console.log("Server ---------->>", server);
+
+console.log("port -------->>", port);

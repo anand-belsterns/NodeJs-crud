@@ -5,6 +5,8 @@ var UserSchema = new mongoose.Schema({
   password: String,
 });
 
+console.log("mongoose -------->>", mongoose);
+
 console.log("UserSchema ------->>", UserSchema);
 
 mongoose.model("User", UserSchema);
