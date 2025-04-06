@@ -49,6 +49,7 @@ router.get('/:id/:id', function (req, res) {
     });
 });
 
+
 // DELETES A USER FROM THE DATABASE
 router.delete('/:id', function (req, res) {
     User.findByIdAndRemove(req.params.id, function (err, user) {
